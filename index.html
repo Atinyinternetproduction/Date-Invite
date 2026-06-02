@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="A minimalist single-page date invitation with playful interactions."
+    />
+    <title>Date Invite</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      .view[data-step="3"] {
+        overflow-y: auto;
+        overscroll-behavior: contain;
+      }
+
+      @media (max-width: 520px) {
+        .view[data-step="3"] {
+          align-content: start;
+          gap: 0.55rem;
+          padding: calc(env(safe-area-inset-top, 0px) + 3.45rem) 0.8rem 1rem;
+          overflow: hidden;
+        }
+
+        .view[data-step="3"] h2 {
+          max-width: none;
+          font-size: clamp(1.15rem, 5.6vw, 1.65rem);
+          line-height: 1;
+          white-space: nowrap;
+          letter-spacing: -0.03em;
+        }
+
+        .view[data-step="3"] .eyebrow {
+          font-size: 0.56rem;
+          letter-spacing: 0.14em;
+        }
+
+        .view[data-step="3"] .form-stack {
+          width: 100%;
+          gap: 0.55rem;
+        }
+
+        .view[data-step="3"] .date-choice {
+          gap: 0.4rem;
+        }
+
+        .view[data-step="3"] .choice-title {
+          font-size: 0.74rem;
+          text-align: center;
+        }
+
+        .view[data-step="3"] .choice-row {
+          gap: 0.4rem;
+        }
+
+        .view[data-step="3"] .choice-chip {
+          font-size: 0.82rem;
+          padding: 0.58rem 0.75rem;
+        }
+
+        .view[data-step="3"] .field {
+          gap: 0.3rem;
+        }
+
+        .view[data-step="3"] .field span {
+          font-size: 0.78rem;
+        }
+
+        .view[data-step="3"] .field input,
+        .view[data-step="3"] .field select {
+          padding: 0.68rem 0.82rem;
+          border-radius: 14px;
+          font-size: 0.9rem;
+        }
+
+        .view[data-step="3"] .btn-primary {
+          width: 100%;
+          min-width: 0;
+          padding: 0.8rem 1rem;
+          font-size: 0.92rem;
+        }
+
+        .view[data-step="3"] .time-note,
+        .view[data-step="3"] .form-note {
+          min-height: 0.8rem;
+          font-size: 0.72rem;
+        }
+      }
+
+      @media (max-width: 380px) {
+        .view[data-step="3"] {
+          padding: calc(env(safe-area-inset-top, 0px) + 3.25rem) 0.7rem 0.9rem;
+        }
+
+        .view[data-step="3"] h2 {
+          font-size: clamp(1rem, 5.3vw, 1.35rem);
+        }
+
+        .view[data-step="3"] .choice-chip {
+          font-size: 0.76rem;
+          padding: 0.52rem 0.68rem;
+        }
+      }
+
+      @media (max-height: 900px) {
+        .view[data-step="3"] {
+          align-content: start;
+          gap: 0.6rem;
+          padding-top: 3.75rem;
+          padding-bottom: 1rem;
+        }
+
+        .view[data-step="3"] h2 {
+          font-size: clamp(1.5rem, 3.8vw, 2.15rem);
+          line-height: 1;
+          max-width: none;
+          white-space: nowrap;
+        }
+
+        .view[data-step="3"] .form-stack {
+          gap: 0.65rem;
+        }
+
+        .view[data-step="3"] .choice-title,
+        .view[data-step="3"] .time-note,
+        .view[data-step="3"] .form-note {
+          font-size: 0.78rem;
+        }
+
+        .view[data-step="3"] .field input,
+        .view[data-step="3"] .field select {
+          padding: 0.72rem 0.9rem;
+        }
+      }
+
+      @media (max-height: 760px) {
+        .view[data-step="3"] {
+          gap: 0.5rem;
+          padding-top: 3.4rem;
+          padding-bottom: 0.85rem;
+        }
+
+        .view[data-step="3"] .eyebrow {
+          font-size: 0.54rem;
+        }
+
+        .view[data-step="3"] h2 {
+          font-size: clamp(1.2rem, 3.2vw, 1.7rem);
+          max-width: none;
+          white-space: nowrap;
+        }
+
+        .view[data-step="3"] .choice-chip {
+          padding: 0.56rem 0.72rem;
+        }
+
+        .view[data-step="3"] .field {
+          gap: 0.28rem;
+        }
+
+        .view[data-step="3"] .field span {
+          font-size: 0.76rem;
+        }
+
+        .view[data-step="3"] .field input,
+        .view[data-step="3"] .field select {
+          padding: 0.66rem 0.82rem;
+          border-radius: 14px;
+        }
+
+        .view[data-step="3"] .btn-primary {
+          padding: 0.76rem 1rem;
+        }
+      }
+    </style>
+    <style>
+      .view[data-step="5"] .media-card {
+        margin-inline: auto;
+      }
+
+      .view[data-step="5"] .food-image {
+        width: min(100%, 11rem);
+        display: block;
+        margin-inline: auto;
+        opacity: 1;
+      }
+
+      .view[data-step="5"] .food-grid {
+        width: min(100%, 34rem);
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1rem;
+        margin-inline: auto;
+      }
+
+      .view[data-step="5"] .food-card {
+        min-height: 10.5rem;
+        align-content: center;
+      }
+
+      @media (max-width: 520px) {
+        .view[data-step="5"] .food-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .view[data-step="5"] .food-image {
+          width: min(100%, 8rem);
+        }
+      }
+    </style>
+    <style>
+      @media (max-width: 520px) {
+        .view[data-step="5"] {
+          gap: 0.75rem;
+          padding-bottom: 1.2rem;
+        }
+
+        .view[data-step="5"] h2 {
+          font-size: clamp(1.7rem, 8vw, 2.3rem);
+        }
+
+        .view[data-step="5"] .subtext {
+          font-size: 0.88rem;
+        }
+
+        .view[data-step="5"] .food-grid {
+          width: min(100%, 19rem);
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 0.7rem;
+        }
+
+        .view[data-step="5"] .food-card {
+          min-height: 7.8rem;
+          padding: 0.9rem 0.65rem;
+          border-radius: 18px;
+        }
+
+        .view[data-step="5"] .food-emoji {
+          font-size: 1.7rem;
+        }
+
+        .view[data-step="5"] .food-name {
+          font-size: 0.88rem;
+        }
+
+        .view[data-step="5"] .food-image {
+          width: min(100%, 6.2rem);
+        }
+      }
+
+      @media (max-width: 380px) {
+        .view[data-step="5"] .food-grid {
+          width: min(100%, 17rem);
+          gap: 0.6rem;
+        }
+
+        .view[data-step="5"] .food-card {
+          min-height: 7rem;
+          padding: 0.8rem 0.55rem;
+        }
+
+        .view[data-step="5"] .food-name {
+          font-size: 0.8rem;
+        }
+
+        .view[data-step="5"] .food-image {
+          width: min(100%, 5.4rem);
+        }
+      }
+    </style>
+    <style>
+      .view[data-step="5"] {
+        overflow-y: auto;
+        overscroll-behavior: contain;
+      }
+
+      @media (max-width: 1200px) {
+        .view[data-step="5"] {
+          align-content: start;
+          gap: 0.85rem;
+          padding-top: 4.1rem;
+          padding-bottom: 1.2rem;
+        }
+
+        .view[data-step="5"] h2 {
+          font-size: clamp(2rem, 4.4vw, 3rem);
+          max-width: 10ch;
+          line-height: 0.96;
+        }
+
+        .view[data-step="5"] .subtext {
+          font-size: 0.95rem;
+        }
+
+        .view[data-step="5"] .food-image {
+          width: min(100%, 8.5rem);
+        }
+
+        .view[data-step="5"] .food-grid {
+          width: min(100%, 30rem);
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 0.85rem;
+        }
+
+        .view[data-step="5"] .food-card {
+          min-height: 8.6rem;
+          padding: 1rem 0.75rem;
+        }
+
+        .view[data-step="5"] .food-name {
+          font-size: 1rem;
+        }
+      }
+    </style>
+    <style>
+      .food-view {
+        overflow-y: auto;
+        overscroll-behavior: contain;
+      }
+
+      .food-view .food-title {
+        max-width: none !important;
+        width: 100%;
+        white-space: nowrap !important;
+        font-size: clamp(2.4rem, 4.2vw, 3.5rem) !important;
+        line-height: 0.95 !important;
+        letter-spacing: -0.04em;
+      }
+
+      .food-view .subtext {
+        max-width: none;
+      }
+
+      .food-view .media-card {
+        margin-inline: auto;
+      }
+
+      .food-view .food-image {
+        width: min(100%, 7.4rem);
+        display: block;
+        margin-inline: auto;
+      }
+
+      .food-view .food-grid {
+        width: min(100%, 31rem);
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.85rem;
+        margin-inline: auto;
+      }
+
+      .food-view .food-card {
+        min-height: 8rem;
+        padding: 0.9rem 0.7rem;
+        align-content: center;
+      }
+
+      .food-view .food-emoji {
+        font-size: 1.8rem;
+      }
+
+      .food-view .food-name {
+        font-size: 0.95rem;
+      }
+
+      @media (min-width: 1024px) {
+        .food-view {
+          overflow: hidden;
+          align-content: start;
+          gap: 0.7rem;
+          padding-top: 4rem;
+          padding-bottom: 1rem;
+        }
+
+        .food-view .eyebrow {
+          font-size: 0.7rem;
+        }
+
+        .food-view .subtext {
+          font-size: 0.88rem;
+          white-space: nowrap;
+        }
+      }
+
+      @media (max-width: 1023px) {
+        .food-view .food-title {
+          white-space: normal !important;
+          font-size: clamp(2rem, 4.4vw, 3rem) !important;
+        }
+      }
+
+      @media (max-width: 520px) {
+        .food-view {
+          gap: 0.75rem;
+          padding-bottom: 1.2rem;
+        }
+
+        .food-view .food-title {
+          white-space: normal !important;
+          font-size: clamp(1.7rem, 8vw, 2.3rem) !important;
+        }
+
+        .food-view .subtext {
+          font-size: 0.88rem;
+        }
+
+        .food-view .food-grid {
+          width: min(100%, 19rem);
+          gap: 0.7rem;
+        }
+
+        .food-view .food-card {
+          min-height: 7.8rem;
+          padding: 0.9rem 0.65rem;
+          border-radius: 18px;
+        }
+
+        .food-view .food-emoji {
+          font-size: 1.7rem;
+        }
+
+        .food-view .food-name {
+          font-size: 0.88rem;
+        }
+
+        .food-view .food-image {
+          width: min(100%, 6.2rem);
+        }
+      }
+
+      @media (max-width: 380px) {
+        .food-view .food-grid {
+          width: min(100%, 17rem);
+          gap: 0.6rem;
+        }
+
+        .food-view .food-card {
+          min-height: 7rem;
+          padding: 0.8rem 0.55rem;
+        }
+
+        .food-view .food-name {
+          font-size: 0.8rem;
+        }
+
+        .food-view .food-image {
+          width: min(100%, 5.4rem);
+        }
+      }
+    </style>
+    <style>
+      @media (min-width: 1000px) and (max-width: 1400px) {
+        .panel,
+        .views {
+          min-height: calc(100vh - 3rem);
+        }
+
+        .view {
+          gap: 0.8rem;
+          padding: 4.2rem 1.5rem 1.2rem;
+          align-content: start;
+        }
+
+        h1,
+        h2 {
+          font-size: clamp(2.2rem, 4vw, 3.4rem);
+          line-height: 0.94;
+          max-width: 11ch;
+        }
+
+        .eyebrow {
+          font-size: 0.66rem;
+        }
+
+        .subtext,
+        .final-subtext,
+        .form-note,
+        .time-note,
+        .date-note {
+          font-size: 0.9rem;
+        }
+
+        .media-card,
+        .summary-card {
+          padding: 0.75rem;
+        }
+
+        .hero-image,
+        .surprise-image,
+        .warning-image,
+        .reminder-image,
+        .food-image {
+          width: min(100%, 7.4rem);
+        }
+
+        .food-view .food-title {
+          font-size: clamp(2rem, 3.2vw, 2.8rem) !important;
+          white-space: nowrap !important;
+          max-width: none !important;
+        }
+
+        .food-view .subtext {
+          white-space: nowrap;
+          font-size: 0.84rem;
+        }
+
+        .food-view .food-grid {
+          width: min(100%, 44rem);
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+          gap: 0.65rem;
+        }
+
+        .food-view .food-card {
+          min-height: 6.2rem;
+          padding: 0.7rem 0.45rem;
+          border-radius: 20px;
+        }
+
+        .food-view .food-emoji {
+          font-size: 1.45rem;
+        }
+
+        .food-view .food-name {
+          font-size: 0.72rem;
+        }
+
+        .form-stack {
+          gap: 0.75rem;
+        }
+
+        .field input,
+        .field select {
+          padding: 0.82rem 0.95rem;
+        }
+
+        .choice-chip,
+        .btn {
+          padding: 0.82rem 1rem;
+        }
+
+        .view[data-step="3"] {
+          justify-items: center;
+          justify-content: center;
+          text-align: center;
+        }
+
+        .view[data-step="3"] .form-stack {
+          width: min(100%, 39rem);
+          justify-items: center;
+        }
+
+        .view[data-step="3"] .date-choice,
+        .view[data-step="3"] .field,
+        .view[data-step="3"] .date-note,
+        .view[data-step="3"] .time-note,
+        .view[data-step="3"] .form-note,
+        .view[data-step="3"] .subtext {
+          width: 100%;
+          text-align: center;
+        }
+
+        .view[data-step="3"] .field span {
+          text-align: center;
+        }
+      }
+
+      @media (min-width: 1000px) and (max-height: 900px) {
+        .panel,
+        .views {
+          min-height: calc(100vh - 2rem);
+        }
+
+        .view {
+          padding-top: 3.8rem;
+          padding-bottom: 1rem;
+          gap: 0.65rem;
+        }
+
+        h1,
+        h2 {
+          font-size: clamp(1.9rem, 3.2vw, 2.8rem);
+        }
+
+        .food-view .food-title {
+          font-size: clamp(1.8rem, 2.8vw, 2.4rem) !important;
+        }
+
+        .food-view .food-grid {
+          width: min(100%, 42rem);
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+
+        .food-view .food-card {
+          min-height: 5.8rem;
+          padding: 0.65rem 0.4rem;
+        }
+
+        .food-view .food-name {
+          font-size: 0.68rem;
+        }
+      }
+    </style>
+    <style>
+      .food-view .food-grid {
+        width: min(100%, 34rem) !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 0.75rem !important;
+      }
+
+      .food-view .food-card {
+        min-height: 4.6rem !important;
+        padding: 0.8rem 1rem !important;
+        border-radius: 999px !important;
+        box-shadow: 0 14px 28px rgba(97, 53, 61, 0.1) !important;
+      }
+
+      .food-view .food-emoji {
+        font-size: 1.25rem !important;
+      }
+
+      .food-view .food-name {
+        font-size: 0.9rem !important;
+      }
+
+      @media (min-width: 1000px) {
+        .food-view .food-grid {
+          width: min(100%, 36rem) !important;
+          grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+          gap: 0.55rem !important;
+        }
+
+        .food-view .food-card {
+          min-height: 3.9rem !important;
+          padding: 0.68rem 0.55rem !important;
+        }
+
+        .food-view .food-emoji {
+          font-size: 1rem !important;
+        }
+
+        .food-view .food-name {
+          font-size: 0.68rem !important;
+        }
+      }
+
+      @media (max-width: 520px) {
+        .food-view .food-grid {
+          width: min(100%, 19rem) !important;
+          grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+          gap: 0.65rem !important;
+        }
+
+        .food-view .food-card {
+          min-height: 4rem !important;
+          padding: 0.7rem 0.6rem !important;
+        }
+
+        .food-view .food-emoji {
+          font-size: 1rem !important;
+        }
+
+        .food-view .food-name {
+          font-size: 0.72rem !important;
+        }
+      }
+    </style>
+    <style>
+      @media (max-width: 520px) {
+        .food-view {
+          justify-items: center !important;
+          justify-content: center !important;
+          text-align: center !important;
+          align-items: center !important;
+        }
+
+        .food-view .food-title,
+        .food-view .eyebrow,
+        .food-view .subtext {
+          text-align: center !important;
+          margin-inline: auto !important;
+        }
+
+        .food-view .food-grid {
+          width: min(100%, 19rem) !important;
+          grid-template-columns: 1fr !important;
+          gap: 0.7rem !important;
+          margin-inline: auto !important;
+        }
+
+        .food-view .media-card,
+        .food-view .media-placeholder,
+        .food-view .reminder-photo-wrap {
+          width: 100% !important;
+          display: grid !important;
+          justify-items: center !important;
+        }
+
+        .food-view .food-image {
+          width: min(100%, 9.5rem) !important;
+          display: block !important;
+          margin-inline: auto !important;
+        }
+
+        .food-view .food-card {
+          min-height: 6.8rem !important;
+          padding: 0.85rem 0.7rem !important;
+          border-radius: 22px !important;
+        }
+
+        .food-view .food-emoji {
+          font-size: 1.25rem !important;
+        }
+
+        .food-view .food-name {
+          font-size: 0.78rem !important;
+        }
+      }
+
+      @media (max-width: 380px) {
+        .food-view .food-image {
+          width: min(100%, 8.2rem) !important;
+        }
+
+        .food-view .food-card {
+          min-height: 6rem !important;
+          padding: 0.75rem 0.55rem !important;
+        }
+
+        .food-view .food-name {
+          font-size: 0.72rem !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="ambient ambient-one" aria-hidden="true"></div>
+    <div class="ambient ambient-two" aria-hidden="true"></div>
+    <div class="heart-overlay" id="heart-overlay" aria-hidden="true"></div>
+
+    <main class="app-shell">
+      <section class="panel">
+        <div class="progress-dots" aria-label="Progress">
+          <span class="dot active"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+        </div>
+
+        <div class="views">
+          <article class="view active" data-step="1">
+            <p class="eyebrow">A tiny internet production</p>
+            <div class="hero-title-wrap">
+              <h1>Will you go on a date with me?</h1>
+            </div>
+            <div class="media-card">
+              <div class="media-placeholder media-placeholder-clean">
+                <img
+                  class="hero-image"
+                  src="png-animal-mammal-kitten-cute.png"
+                  alt="Cute kitten"
+                />
+              </div>
+            </div>
+            <p class="hero-caption">i even brought a tiny cat for emotional support</p>
+            <div class="action-row action-row-question">
+              <button class="btn btn-primary" id="yes-btn" type="button">YES 💞</button>
+              <button class="btn btn-secondary flee-button" id="no-btn" type="button">
+                no... 🥺
+              </button>
+            </div>
+          </article>
+
+          <article class="view" data-step="2">
+            <p class="eyebrow">Unexpected plot twist</p>
+            <h2>WAIT YOU ACTUALLY SAID YES?? 💗</h2>
+            <p class="subtext">I was so ready for you to say no 💘</p>
+            <div class="media-card">
+              <div class="media-placeholder alt">
+                <img
+                  class="hero-image surprise-image"
+                  src="black-cat-holding-red-heart-as-valentines-day-present-isolated-white-background.png"
+                  alt="Black cat holding a red heart"
+                />
+              </div>
+            </div>
+            <button class="btn btn-primary" data-next-step="3" type="button">okay okay! →</button>
+          </article>
+
+          <article class="view" data-step="3">
+            <p class="eyebrow">Scheduling department</p>
+            <h2>📅🐾 So... when are you free?</h2>
+            <form class="form-stack" id="date-form">
+              <div class="date-choice">
+                <p class="choice-title">Or... should we just make it official? 💌</p>
+                <div class="choice-row">
+                  <button class="choice-chip active" id="preset-date-btn" type="button">
+                    June 5
+                  </button>
+                  <button class="choice-chip" id="custom-date-btn" type="button">
+                    June 6 ☹️
+                  </button>
+                </div>
+              </div>
+              <p class="date-note" id="date-note" aria-live="polite"></p>
+              <label class="field">
+                <span>When it works for you ✨</span>
+                <select id="time-input" name="time" required>
+                  <option value="" selected disabled>Pick the vibe</option>
+                  <option value="Whenever you can — time is not a problem">Whenever you can — time is not a problem</option>
+                  <option value="We will figure it out together">We will figure it out together</option>
+                  <option value="Sunset drive and a sweet view">Sunset drive and a sweet view</option>
+                  <option value="Just talking in the car">Just talking in the car</option>
+                </select>
+              </label>
+              <p class="subtext">
+                Notes: I cook, I clean, I’m flexible, and I’m cute about it. 🫶
+              </p>
+              <p class="time-note" id="time-note" aria-live="polite"></p>
+              <p class="form-note" id="form-note" aria-live="polite"></p>
+              <button class="btn btn-primary" type="submit">set the date! 💗</button>
+            </form>
+          </article>
+
+          <article class="view" data-step="4">
+            <p class="eyebrow">One tiny warning</p>
+            <h2>Only talking in the car? ♡</h2>
+            <p class="subtext">Talking is lovely. Heartbreak is not. Every time a guy breaks a girl's heart, God pushes his hairline back a half inch — so let’s protect your hair and not break each other’s hearts.</p>
+            <div class="media-card">
+              <div class="media-placeholder alt reminder-photo-wrap">
+                <img
+                  class="hero-image warning-image"
+                  src="magnific__background__30949.png"
+                  alt="Warning cat illustration"
+                />
+              </div>
+            </div>
+            <p class="subtext">So... will you let me plan something a little cuter?</p>
+            <div class="action-row action-row-warning">
+              <button class="btn btn-primary" id="warning-yes-btn" type="button">yes ♡</button>
+              <button class="btn btn-secondary flee-button warning-flee" id="warning-no-btn" type="button">
+                no...
+              </button>
+            </div>
+          </article>
+
+          <article class="view food-view" data-step="5">
+            <p class="eyebrow">Important culinary business</p>
+            <h2 class="food-title">What a cutie. Let’s make this delicious too? 🌙✨</h2>
+            <p class="subtext">And if you like late-night food too, should we eat something good?</p>
+            <div class="media-card">
+              <div class="media-placeholder alt reminder-photo-wrap">
+                <img
+                  class="hero-image food-image"
+                  src="white-cat-full-of-food-sticker.png"
+                  alt="White cat full of food sticker"
+                />
+              </div>
+            </div>
+            <div class="food-grid" id="food-grid">
+              <button class="food-card" type="button" data-food="Fast Food">
+                <span class="food-emoji">🍔</span>
+                <span class="food-name">Fast Food</span>
+              </button>
+              <button class="food-card" type="button" data-food="Beer">
+                <span class="food-emoji">🍺</span>
+                <span class="food-name">Beer</span>
+              </button>
+              <button class="food-card" type="button" data-food="Only Talking">
+                <span class="food-emoji">💬</span>
+                <span class="food-name">Only Talking</span>
+              </button>
+              <button class="food-card" type="button" data-food="Something Else">
+                <span class="food-emoji">✨</span>
+                <span class="food-name">Something Else</span>
+              </button>
+            </div>
+          </article>
+
+          <article class="view" data-step="6">
+            <p class="eyebrow">Just A Reminder</p>
+            <h2>I hope the conversation goes sweetly. ♡</h2>
+            <div class="media-card">
+              <div class="media-placeholder alt reminder-photo-wrap">
+                <img
+                  class="hero-image reminder-image"
+                  src="love-background-design.png"
+                  alt="Cute reminder photo"
+                />
+              </div>
+            </div>
+            <p class="subtext">Whatever you picked, I understood one thing very clearly: every road is still leading to something cute with you.</p>
+            <button class="btn btn-primary" id="reminder-next-btn" type="button">one more thing →</button>
+          </article>
+
+          <article class="view finale" data-step="7">
+            <p class="eyebrow">Officially locked in</p>
+            <h2>Be ready. I’ll come get you, and you can wait for me like the cutest thing ever. 🚗</h2>
+            <div class="summary-card" id="summary-card"></div>
+            <p class="final-subtext">
+              I’m bringing the plan, the ride, and the softest energy possible. You just have to wait for me and look cute.
+            </p>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <script type="module" src="script.js"></script>
+  </body>
+</html>
