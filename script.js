@@ -1,7 +1,7 @@
 // Replace these placeholders with your real Telegram bot credentials.
 const BOT_TOKEN = 'YOUR_BOT_TOKEN';
 const CHAT_ID = 'YOUR_CHAT_ID';
-const EMAIL_ENDPOINT = 'http://localhost:3000/api/date-notify';
+const EMAIL_ENDPOINT = '/api/date-notify';
 
 const views = [...document.querySelectorAll('.view')];
 const dots = [...document.querySelectorAll('.dot')];
