@@ -211,11 +211,39 @@ function moveFleeButton(button, container) {
 
   const boundsRect = container.getBoundingClientRect();
   const buttonRect = button.getBoundingClientRect();
+  const safeElement = container.querySelector('#warning-yes-btn');
+  const safeRect = safeElement ? safeElement.getBoundingClientRect() : null;
   const padding = window.innerWidth <= 520 ? 12 : 20;
   const maxX = Math.max(padding, boundsRect.width - buttonRect.width - padding);
   const maxY = Math.max(padding, boundsRect.height - buttonRect.height - padding);
-  const nextLeft = Math.random() * maxX;
-  const nextTop = Math.random() * maxY;
+
+  let nextLeft = Math.random() * maxX;
+  let nextTop = Math.random() * maxY;
+
+  if (safeRect) {
+    const blockedArea = {
+      left: safeRect.left - boundsRect.left - 12,
+      right: safeRect.right - boundsRect.left + 12,
+      top: safeRect.top - boundsRect.top - 12,
+      bottom: safeRect.bottom - boundsRect.top + 12
+    };
+
+    for (let attempt = 0; attempt < 40; attempt += 1) {
+      const candidateLeft = Math.random() * maxX;
+      const candidateTop = Math.random() * maxY;
+      const overlapsSafeButton =
+        candidateLeft < blockedArea.right &&
+        candidateLeft + buttonRect.width > blockedArea.left &&
+        candidateTop < blockedArea.bottom &&
+        candidateTop + buttonRect.height > blockedArea.top;
+
+      if (!overlapsSafeButton) {
+        nextLeft = candidateLeft;
+        nextTop = candidateTop;
+        break;
+      }
+    }
+  }
 
   button.classList.add('is-fleeing');
   button.style.left = `${nextLeft}px`;

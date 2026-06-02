@@ -802,6 +802,10 @@ h2 {
 }
 
 @media (max-width: 520px) {
+  .view[data-step="4"] h2 {
+    font-size: clamp(2rem, 9vw, 2.7rem) !important;
+  }
+
   .view {
     justify-items: center !important;
     justify-content: center !important;
@@ -843,6 +847,15 @@ h2 {
 
   .field span {
     text-align: center !important;
+  }
+
+  .action-row-warning {
+    min-height: 8.5rem !important;
+    width: min(100%, 21rem) !important;
+  }
+
+  .warning-flee {
+    left: calc(50% + 4.9rem) !important;
   }
 }
 
